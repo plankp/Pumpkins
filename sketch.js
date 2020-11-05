@@ -24,12 +24,11 @@ let sprArrowUp;
 let current_scene = function () { /* do nothing */ };
 
 function preload() {
-    /*
     sprPumpkin    = loadImage('pumpkin.png');
     sprArrowDown  = loadImage('arrowDown.png');
     sprArrowLeft  = loadImage('arrowLeft.png');
     sprArrowRight = loadImage('arrowRight.png');
-    sprArrowUp    = loadImage('arrowUp.png'); */
+    sprArrowUp    = loadImage('arrowUp.png');
 }
 
 function setup() {
