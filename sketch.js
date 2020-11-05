@@ -66,7 +66,7 @@ function draw() {
 }
 
 function title_scene() {
-    let acc = field_width;
+    let acc = field_width - 100;
     for (let i = pumpkin_list.length - 1; i >= 0; --i) {
         // predecrement since lowest row is reserved for
         // LEFT, DOWN, UP, RIGHT buttons
@@ -91,11 +91,12 @@ function title_scene() {
                 break;
         }
 
-        image(sprPumpkin, placement, acc, 100, 100, counter * 32, row * 32, 32, 32);
+        // + 1 on sprite starting y cuz some have bad cutoffs
+        image(sprPumpkin, placement, acc, 100, 100, counter / 4 * 32, row * 32 + 1, 32, 32);
     }
 
     // animation black magic
-    if (++counter % 3 == 0)
+    if (++counter % 12 == 0)
         counter = 0;
 }
 
