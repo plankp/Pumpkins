@@ -7,7 +7,10 @@ const DIR_LEFT  = 2;
 const DIR_UP    = 3;
 
 let pumpkin_list = [];
-let counter = 0;
+let wait_counter = 0;
+let anim_counter = 0;
+let start_time = 0;
+let end_time = 0;
 
 let sprPumpkin;
 let sprArrowDown;
@@ -21,11 +24,12 @@ let sprArrowUp;
 let current_scene = function () { /* do nothing */ };
 
 function preload() {
+    /*
     sprPumpkin    = loadImage('pumpkin.png');
     sprArrowDown  = loadImage('arrowDown.png');
     sprArrowLeft  = loadImage('arrowLeft.png');
     sprArrowRight = loadImage('arrowRight.png');
-    sprArrowUp    = loadImage('arrowUp.png');
+    sprArrowUp    = loadImage('arrowUp.png'); */
 }
 
 function setup() {
@@ -45,13 +49,6 @@ function windowResized() {
 
 // Because the p5 folks said I should not call setup after the game starts...
 function my_setup() {
-    // Probably a good amount
-    pumpkin_list = new Array(64);
-    generate_pumpkin_list();
-
-    counter = 0;
-
-    // Switch scene last!
     current_scene = title_scene;
 }
 
@@ -74,7 +71,78 @@ function draw() {
     current_scene();
 }
 
+function draw_arrows() {
+    // Draw the arrow keys
+    image(sprArrowLeft, 100, field_width - 100, 100, 100);
+    image(sprArrowDown, 200, field_width - 100, 100, 100);
+    image(sprArrowUp, 300, field_width - 100, 100, 100);
+    image(sprArrowRight, 400, field_width - 100, 100, 100);
+}
+
 function title_scene() {
+    textAlign(CENTER, CENTER);
+    textSize(50);
+    text('PUMPKINS', 300, 225);
+
+    textSize(20);
+    rect(225, 360, 150, 30);
+    text('Start', 300, 375);
+
+    let inv = field_width / width;
+    let curx = mouseX * inv;
+    let cury = mouseY * inv;
+
+    if (225 <= curx && curx <= 225 + 150 &&
+        360 <= cury && cury <= 360 + 30) {
+        cursor('pointer');
+        if (mouseIsPressed) {
+            // Probably a good amount
+            pumpkin_list = new Array(64);
+            generate_pumpkin_list();
+
+            wait_counter = 3 * 30;
+            anim_counter = 0;
+
+            current_scene = gamemode_standard_scene;
+            return;
+        }
+    } else {
+        cursor();
+    }
+}
+
+function end_game_standard_scene() {
+    textSize(32);
+    text('Cleared in ' + floor((end_time - start_time) / 1000) + 's', 300, 225);
+
+    textSize(20);
+    rect(225, 360, 150, 30);
+    text('Continue', 300, 375);
+
+    let inv = field_width / width;
+    let curx = mouseX * inv;
+    let cury = mouseY * inv;
+
+    if (225 <= curx && curx <= 225 + 150 &&
+        360 <= cury && cury <= 360 + 30) {
+        cursor('pointer');
+        if (mouseIsPressed) {
+            current_scene = title_scene;
+            mouseIsPressed = false;
+            return;
+        }
+    } else {
+        cursor();
+    }
+}
+
+function gamemode_standard_scene() {
+    if (pumpkin_list.length == 0) {
+        end_time = new Date();
+        current_scene = end_game_standard_scene;
+        return;
+    }
+
     // Draw them pumpkins
     let acc = field_width;
     for (let i = pumpkin_list.length - 1; i >= 0; --i) {
@@ -100,23 +168,27 @@ function title_scene() {
         }
 
         // + 1 on sprite starting y cuz some have bad cutoffs
-        image(sprPumpkin, placement, acc - 100, 100, 100, floor(counter / 4) * 32, row * 32 + 1, 32, 32);
+        image(sprPumpkin, placement, acc - 100, 100, 100, floor(anim_counter / 4) * 32, row * 32 + 1, 32, 32);
     }
 
-    // Draw the arrow keys
-    image(sprArrowLeft, 100, field_width - 100, 100, 100);
-    image(sprArrowDown, 200, field_width - 100, 100, 100);
-    image(sprArrowUp, 300, field_width - 100, 100, 100);
-    image(sprArrowRight, 400, field_width - 100, 100, 100);
+    draw_arrows();
+
+    // Draw 3... 2... 1... text if needed
+    if (wait_counter > 0) {
+        textSize(75);
+        text(ceil(wait_counter / 30), 300, 225);
+        wait_counter--;
+        start_time = new Date();
+    }
 
     // animation black magic
-    if (++counter % 12 == 0)
-        counter = 0;
+    if (++anim_counter % 12 == 0)
+        anim_counter = 0;
 }
 
 function keyPressed() {
     // supports wasd, vim's hjkl and standard arrow keys
-    if (current_scene === current_scene) {
+    if (current_scene === current_scene && wait_counter === 0) {
         let matchingDir = -1;
         switch (keyCode) {
         case 72: // h
