@@ -10,6 +10,10 @@ let pumpkin_list = [];
 let counter = 0;
 
 let sprPumpkin;
+let sprArrowDown;
+let sprArrowLeft;
+let sprArrowRight;
+let sprArrowUp;
 
 // The draw function (aka our game loop) just needs to do current_scene() to
 // perform the update the correct scene. The setup function will point this to
@@ -17,7 +21,11 @@ let sprPumpkin;
 let current_scene = function () { /* do nothing */ };
 
 function preload() {
-    sprPumpkin = loadImage('pumpkin.png');
+    sprPumpkin    = loadImage('pumpkin.png');
+    sprArrowDown  = loadImage('arrowDown.png');
+    sprArrowLeft  = loadImage('arrowLeft.png');
+    sprArrowRight = loadImage('arrowRight.png');
+    sprArrowUp    = loadImage('arrowUp.png');
 }
 
 function setup() {
@@ -66,6 +74,7 @@ function draw() {
 }
 
 function title_scene() {
+    // Draw them pumpkins
     let acc = field_width;
     for (let i = pumpkin_list.length - 1; i >= 0; --i) {
         if ((acc -= 100) <= 0)
@@ -92,6 +101,12 @@ function title_scene() {
         // + 1 on sprite starting y cuz some have bad cutoffs
         image(sprPumpkin, placement, acc - 100, 100, 100, floor(counter / 4) * 32, row * 32 + 1, 32, 32);
     }
+
+    // Draw the arrow keys
+    image(sprArrowLeft, 100, field_width - 100, 100, 100);
+    image(sprArrowDown, 200, field_width - 100, 100, 100);
+    image(sprArrowUp, 300, field_width - 100, 100, 100);
+    image(sprArrowRight, 400, field_width - 100, 100, 100);
 
     // animation black magic
     if (++counter % 12 == 0)
