@@ -167,7 +167,9 @@ function gamemode_standard_scene() {
         }
 
         // + 1 on sprite starting y cuz some have bad cutoffs
-        image(sprPumpkin, placement, acc - 100, 100, 100, floor(anim_counter / 4) * 32, row * 32 + 1, 32, 32);
+        // and investigating if safari breaks on invalid image
+        // boundaries...
+        image(sprPumpkin, placement, acc - 100, 100, 100, floor(anim_counter / 4) * 32, row * 32 + 1, 32, row === DIR_UP ? 31 : 32);
     }
 
     draw_arrows();
