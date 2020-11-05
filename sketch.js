@@ -226,7 +226,11 @@ function keyPressed() {
     return false;
 }
 
-function mouseClicked() {
+// Note: it is tempting to use mouseClicked,
+// but mousePressed is what we want:
+// - it fires once when press happens
+// - it supports touchscreen
+function mousePressed() {
     let inv = field_width / width;
     let curx = mouseX * inv;
     let cury = mouseY * inv;
