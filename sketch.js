@@ -241,7 +241,7 @@ function mouseClicked() {
                 matchingDir = DIR_DOWN;
             if (300 < curx && curx < 400)
                 matchingDir = DIR_UP;
-            if (400 < curx && curx < 400)
+            if (400 < curx && curx < 500)
                 matchingDir = DIR_RIGHT;
 
             if (matchingDir !== -1 && pumpkin_list.length > 0)
