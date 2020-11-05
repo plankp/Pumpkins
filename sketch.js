@@ -45,13 +45,14 @@ function windowResized() {
 
 // Because the p5 folks said I should not call setup after the game starts...
 function my_setup() {
-    current_scene = title_scene;
-
     // Probably a good amount
     pumpkin_list = new Array(64);
     generate_pumpkin_list();
 
     counter = 0;
+
+    // Switch scene last!
+    current_scene = title_scene;
 }
 
 function generate_pumpkin_list() {
@@ -114,4 +115,37 @@ function title_scene() {
 }
 
 function keyPressed() {
+    // supports wasd, vim's hjkl and standard arrow keys
+    if (current_scene === current_scene) {
+        let matchingDir = -1;
+        switch (keyCode) {
+        case 72: // h
+        case 65: // a
+        case LEFT_ARROW:
+            matchingDir = DIR_LEFT;
+            break;
+        case 74: // j
+        case 83: // s
+        case DOWN_ARROW:
+            matchingDir = DIR_DOWN;
+            break;
+        case 75: // k
+        case 87: // w
+        case UP_ARROW:
+            matchingDir = DIR_UP;
+            break;
+        case 76: // l
+        case 68: // d
+        case RIGHT_ARROW:
+            matchingDir = DIR_RIGHT;
+            break;
+        }
+
+        if (matchingDir !== -1 && pumpkin_list.length > 0)
+            if (pumpkin_list[pumpkin_list.length - 1] === matchingDir)
+                pumpkin_list.pop();
+    }
+
+    return false;
 }
+
