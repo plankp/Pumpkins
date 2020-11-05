@@ -95,6 +95,8 @@ function title_scene() {
         360 <= cury && cury <= 360 + 30) {
         cursor('pointer');
         if (mouseIsPressed) {
+            cursor();
+
             // Probably a good amount
             pumpkin_list = new Array(64);
             generate_pumpkin_list();
@@ -126,6 +128,8 @@ function end_game_standard_scene() {
         360 <= cury && cury <= 360 + 30) {
         cursor('pointer');
         if (mouseIsPressed) {
+            cursor();
+
             current_scene = title_scene;
             mouseIsPressed = false;
             return;
@@ -219,6 +223,32 @@ function keyPressed() {
                 pumpkin_list.pop();
     }
 
+    return false;
+}
+
+function mouseClicked() {
+    let inv = field_width / width;
+    let curx = mouseX * inv;
+    let cury = mouseY * inv;
+
+    if (current_scene === current_scene && wait_counter === 0) {
+        let matchingDir = -1;
+        // LEFT, DOWN, UP, RIGHT
+        if (field_width - 100 <= cury && cury < field_width) {
+            if (100 < curx && curx < 200)
+                matchingDir = DIR_LEFT;
+            if (200 < curx && curx < 300)
+                matchingDir = DIR_DOWN;
+            if (300 < curx && curx < 400)
+                matchingDir = DIR_UP;
+            if (400 < curx && curx < 400)
+                matchingDir = DIR_RIGHT;
+
+            if (matchingDir !== -1 && pumpkin_list.length > 0)
+                if (pumpkin_list[pumpkin_list.length - 1] === matchingDir)
+                    pumpkin_list.pop();
+        }
+    }
     return false;
 }
 
