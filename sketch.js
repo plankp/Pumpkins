@@ -1,6 +1,13 @@
 const field_width = 600;
 
+// Obtained from pumpkin.png
+const DIR_DOWN  = 0;
+const DIR_RIGHT = 1;
+const DIR_LEFT  = 2;
+const DIR_UP    = 3;
+
 let pumpkin_list = [];
+let counter = 0;
 
 let sprPumpkin;
 
@@ -35,6 +42,8 @@ function my_setup() {
     // Probably a good amount
     pumpkin_list = new Array(64);
     generate_pumpkin_list();
+
+    counter = 0;
 }
 
 function generate_pumpkin_list() {
@@ -42,12 +51,12 @@ function generate_pumpkin_list() {
     // using new Array(len) will actually cause the length
     // to be set properly!
     for (let i = 0; i < pumpkin_list.length; ++i)
-        pumpkin_list[i] = floor(random(3));
+        pumpkin_list[i] = floor(random(4));
 }
 
 function draw() {
     // ***** Paint background *****
-    background(100);
+    background(255);
 
     // ***** Viewport Black-Magic *****
     scale();
@@ -57,7 +66,37 @@ function draw() {
 }
 
 function title_scene() {
-    //
+    let acc = field_width;
+    for (let i = pumpkin_list.length - 1; i >= 0; --i) {
+        // predecrement since lowest row is reserved for
+        // LEFT, DOWN, UP, RIGHT buttons
+        if ((acc -= 100) < 0)
+            break; // out of screen, pointless to draw
+
+        let row = pumpkin_list[i];
+
+        let placement = 0;
+        switch (row) {
+            case DIR_LEFT:
+                placement = 100;
+                break;
+            case DIR_DOWN:
+                placement = 200;
+                break;
+            case DIR_UP:
+                placement = 300;
+                break;
+            case DIR_RIGHT:
+                placement = 400;
+                break;
+        }
+
+        image(sprPumpkin, placement, acc, 100, 100, counter * 32, row * 32, 32, 32);
+    }
+
+    // animation black magic
+    if (++counter % 3 == 0)
+        counter = 0;
 }
 
 function keyPressed() {
